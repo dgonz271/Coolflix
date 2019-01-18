@@ -23,8 +23,7 @@ Coolflix is an app that allows users to browse movies from the [The Movie Databa
 
 ### App Walkthrough GIF
 
-<img src="coolflix_portrait.gif" width=250><br>
-<img src="coolflix_landscape.gif" width=250><br>
+<img src="coolflix_portrait.gif" width=250><br> <img src="coolflix_landscape.gif" height=250><br>
 
 ### Notes
 Describe any challenges encountered while building the app.
