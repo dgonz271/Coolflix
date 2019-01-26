@@ -1,6 +1,7 @@
 package com.example.gonza.coolflix.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,14 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.gonza.coolflix.DetailActivity;
 import com.example.gonza.coolflix.R;
 import com.example.gonza.coolflix.models.Movie;
 
+import org.parceler.Parcels;
+
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
 
@@ -55,6 +64,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
+        RelativeLayout relLayoutCurrent;
+        ImageView playIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,18 +73,39 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            relLayoutCurrent = itemView.findViewById(R.id.rel_layout_port);
+            playIcon = itemView.findViewById(R.id.play_icon);
+
         }
 
-        public void bind(Movie movie) {
+        public void bind(final Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
             String imageURL = movie.getPosterPath();
             //If phone in landscape mode, reference backdrop
             if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                 imageURL = movie.getBackdropPath();
+                //assigning relLayoutCurrent to the landscape relative layout
+                //prevents a crash that occurs when phone is flipped
+                relLayoutCurrent = itemView.findViewById(R.id.rel_layout_land);
             }
-            //Glide.with(context).load(imageURL).into(ivPoster);
+
+
             Glide.with(context).load(imageURL).apply(new RequestOptions().placeholder(R.drawable.coolflix_placeholder).error(R.drawable.coolflix_error)).into(ivPoster);
+
+            //adding a listener on the entire movie row to send user to detail activity
+            relLayoutCurrent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("movie", Parcels.wrap(movie));
+                    context.startActivity(intent);
+                }
+            });
+
+            if(movie.isPopular()) { playIcon.setVisibility(View.VISIBLE); }
+
+
         }
     }
 }

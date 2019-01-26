@@ -14,7 +14,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="71dp" />
+        android:layout_marginTop="71dp"
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/Logo"
